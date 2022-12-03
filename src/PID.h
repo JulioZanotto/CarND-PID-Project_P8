@@ -40,12 +40,6 @@ class PID {
   double d_error;
   double prev_cte;
 
-
-  long counter;
-  double errorSum;
-  double minError;
-  double maxError;
-
   /**
    * PID Coefficients
    */ 
