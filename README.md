@@ -108,16 +108,21 @@ Describe the effect each of the P, I, D components had in your implementation.
   Visual aids are encouraged, i.e. record of a small video of the car in the simulator and describe what each component is set to.
 
 P Values:
-  The proportional portion of the controller tries to steer the car toward the center line (against the cross-track error). If used along, the car overshoots the central line very easily and go out of the road very quickly. An example video where this component is used along is
+  The proportional error, tries to move the error to zero, proportionally to a constant and the diference between where is the car and the center line (CTE), so while trying to reach the center line it will always produce an overshooting and because of this it will oscillate leading to an unstable behavior. With a low Kp value it can manage the straight line for a while and becomes instable on curves. The video showing the behavior is:
 
 I values:
-  The integral portion tries to eliminate a possible bias on the controlled system that could prevent the error to be eliminated. If used along, it makes the car to go in circles. In the case of the simulator, no bias is present.
+  The integral error, will try to remove any bias by adding all the errors so far, while being used alone will lead to a always steer situation driving in circle, as can be observed in this video:  . This happens even for low value as 0.01. 
 
 D Values:
-  The differential portion helps to counteract the proportional trend to overshoot the center line by smoothing the approach to it.
+  The derivative error, will take into account the differential error, this in use with the proportional error will help the overshooting not to occur. By using only the D portion, the car will only steer if there is a change in the error, making small adjustments in the curves, as the error is constant in straight lines, it will add no error to the control, and therefore drive in a stright line paralel to the center. This can be seen in this video.
 
 Describe how the final hyperparameters were chosen.
   Student discusses how they chose the final hyperparameters (P, I, D coefficients). This could be have been done through manual tuning, twiddle, SGD, or something else, or a combination!
 
+  The parameters were chosen by trial and error, I couldnt quite get how to apply the twiddle and so kept the trial and error. First I chose only the proportional error, in a way that the car wasnt oscilating that much, and decreased a little, then I added the Derivative error, to counter the overshooting and oscilation. The PD controller was able to keep the car in the center lane without getting out of track, as the simulation has no bias, the controller of the sterring is perfect the integral value did not much of a change, but I added a very small value that seems to help to keep the car a little bit more stable. In order to spicy things a little I added a PID to the speed, trying to keep the car a little faster, around 40MPH, so if the CTE error increases the model would slow down the car a little bit. In the end was a PD controller for the speed and the car could keep all wheels in track and oscillate a little.
+
 The vehicle must successfully drive a lap around the track.
+
   No tire may leave the drivable portion of the track surface. The car may not pop up onto ledges or roll over any surfaces that would otherwise be considered unsafe (if humans were in the vehicle).
+
+  The car could safely drive endlessly in the track without leaving the drivable portion.

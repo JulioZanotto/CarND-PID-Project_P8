@@ -39,12 +39,18 @@ int main() {
    * TODO: Initialize the pid variable.
    */
 
-  // PID Proportional
-  pid.Init(0.2, 0.004, 3.0);
+  // Proportional
+  //pid.Init(0.2, 0.0, 0.0);
+
+  // Integral
+  //pid.Init(0.0, 0.01, 0.0);
+
+  // Derivative
+  //pid.Init(0.0, 0.0, 2.0);
 
   // Final parameters.
-  //pid.Init(0.15, 0.0, 2.5);
-  //vel_pid.Init(0.2, 0.0, 1.0);
+  pid.Init(0.2, 0.002, 2.0);
+  vel_pid.Init(0.05, 0.0, 1.0);
 
   h.onMessage([&pid, &vel_pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, 
                      uWS::OpCode opCode) {
@@ -65,7 +71,7 @@ int main() {
           double speed = std::stod(j[1]["speed"].get<string>());
           double angle = std::stod(j[1]["steering_angle"].get<string>());
           double steer_value = 0.0;
-          double speed_value = 0.3;
+          double speed_value = 0.35;
           /**
            * TODO: Calculate steering value here, remember the steering value is
            *   [-1, 1].
@@ -75,8 +81,8 @@ int main() {
 
           pid.UpdateError(cte);
           steer_value = pid.TotalError();
-          //vel_pid.UpdateError(cte);
-          //speed_value -= vel_pid.TotalError();
+          vel_pid.UpdateError(cte);
+          speed_value += vel_pid.TotalError();
           
           // DEBUG
           //std::cout << "CTE: " << cte << " Steering Value: " << steer_value 
